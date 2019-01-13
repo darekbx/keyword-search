@@ -40,7 +40,8 @@ class AddKeywordPage extends StatelessWidget {
                 .of(context)
                 .accentColor,
             textColor: Colors.white,
-            onPressed: () {})
+            onPressed: () => Navigator.pop(context, "KEYWORD")
+        )
     );
   }
 }

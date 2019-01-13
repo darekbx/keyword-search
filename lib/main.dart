@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'add_keyword_page.dart';
-import 'add_source_page.dart';
-import 'tag_widget.dart';
+import 'sources_page.dart';
+import 'keyword_widget.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,62 +14,72 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: TagListPage(title: 'Keywords'),
+      home: KeywordListPage(title: 'Keywords'),
     );
   }
 }
 
-class TagListPage extends StatefulWidget {
-  TagListPage({Key key, this.title}) : super(key: key);
+class KeywordListPage extends StatefulWidget {
+  KeywordListPage({Key key, this.title}) : super(key: key);
 
   final String title;
-
-  final List tags = ["RTT", "Wifi scan", "Round Trip Time"];
+  final List keywords = ["RTT", "Wifi scan", "Round Trip Time"];
 
   @override
-  _TagListPageState createState() => _TagListPageState();
+  _KeywordListPageState createState() => _KeywordListPageState();
 }
 
-class _TagListPageState extends State<TagListPage> {
+class _KeywordListPageState extends State<KeywordListPage> {
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text(widget.title),
         ),
         body: ListView.builder(
-            itemCount: widget.tags.length,
+            itemCount: widget.keywords.length,
             itemBuilder: (BuildContext context, int index) {
-              return TagWidget(tag: widget.tags[index]);
+              return KeywordWidget(keyword: widget.keywords[index]);
             }
         ),
-        floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(bottom: 16.0),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(
-                         builder: (context) => AddSourcePage()));
-                    },
-                    tooltip: 'Add source',
-                    heroTag: 'source',
-                    child: Icon(Icons.library_add),
-                  )
-              ),
-              FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => AddKeywordPage()));
-                },
-                tooltip: 'Add keyword',
-                heroTag: 'keyword',
-                child: Icon(Icons.add),
-              )
-            ]
-        )
+        floatingActionButton: _buildFloatingButtons(context)
     );
+  }
+
+  Column _buildFloatingButtons(BuildContext context) {
+    return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(bottom: 16.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => SourcesPage()));
+                  },
+                  tooltip: 'Sources',
+                  heroTag: 'sources',
+                  child: Icon(Icons.layers),
+                )
+            ),
+            FloatingActionButton(
+              onPressed: () => _openAddKeyword(context),
+              tooltip: 'Add keyword',
+              heroTag: 'keyword',
+              child: Icon(Icons.add),
+            )
+          ]
+      );
+  }
+
+  void _openAddKeyword(BuildContext context) async {
+    var result = await Navigator.push(context, MaterialPageRoute(
+        builder: (context) => AddKeywordPage()));
+
+
   }
 }

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:keywords_lookup/sources/sources.dart';
 
-class TagWidget extends StatefulWidget {
+class KeywordWidget extends StatefulWidget {
 
-  TagWidget({Key key, this.tag}) : super(key: key);
+  KeywordWidget({Key key, this.keyword}) : super(key: key);
 
-  final String tag;
+  final List sources = Sources.sources;
+  final String keyword;
 
   @override
-  State<StatefulWidget> createState() => _TagWidgetState();
+  State<StatefulWidget> createState() => _KeywordWidgetState();
 }
 
-class _TagWidgetState extends State<TagWidget> {
+class _KeywordWidgetState extends State<KeywordWidget> {
 
   int newCount = 0;
   int allCount = 0;
@@ -21,32 +23,30 @@ class _TagWidgetState extends State<TagWidget> {
     return
       Padding(
         padding: EdgeInsets.only(left: 16, right: 16, top: 8),
-        child:
-        Column(
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: 4),
-              child: Text(stateDebug)
-            ),
+              Padding(
+                  padding: EdgeInsets.only(bottom: 4),
+                  child: Text(stateDebug)
+              ),
               Row(
                   children: <Widget>[
-                    _dataLoaded() ? Text("4/532", style: TextStyle(fontSize: 12),) : _progress(),
+                    _dataLoaded() ? Text(
+                      "4/532", style: TextStyle(fontSize: 12),) : _progress(),
                     Padding(
-                        padding: EdgeInsets.only(left: 16.0),
-                        child: Text(
-                            "https://stackoverflow.com",
-                          style: TextStyle(
-                              color: Colors.black38,
+                      padding: EdgeInsets.only(left: 16.0),
+                      child: Text(
+                        "https://stackoverflow.com",
+                        style: TextStyle(
+                            color: Colors.black38,
                             fontSize: 12
-                          ),
                         ),
+                      ),
                     )
                   ]
               ),
-
               Divider(color: Colors.black38),
-
             ]),
       );
   }
@@ -68,7 +68,7 @@ class _TagWidgetState extends State<TagWidget> {
 
     Future.delayed(Duration(seconds: 3), () {
       setState(() {
-        stateDebug = widget.tag;
+        stateDebug = widget.keyword;
         allCount = 543;
       });
     }
