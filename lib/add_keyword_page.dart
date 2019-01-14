@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:keywords_lookup/repository/repository.dart';
+import 'model/keyword.dart';
 
 class AddKeywordPage extends StatelessWidget {
+
+  Repository _repository = Repository();
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +44,16 @@ class AddKeywordPage extends StatelessWidget {
                 .of(context)
                 .accentColor,
             textColor: Colors.white,
-            onPressed: () => Navigator.pop(context, "KEYWORD")
+            onPressed: () => _saveAndPop(context)
         )
     );
+  }
+
+  Future _saveAndPop(BuildContext context) async {
+
+    TODO:
+    _repository.save(Keyword(keyword:, sources:  ));
+
+    Navigator.pop(context);
   }
 }
