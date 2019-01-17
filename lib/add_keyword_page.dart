@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:keywords_lookup/repository/repository.dart';
 import 'model/keyword.dart';
+import 'package:keywords_lookup/sources/sources.dart';
 
 class AddKeywordPage extends StatelessWidget {
 
@@ -16,7 +17,16 @@ class AddKeywordPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           _keywordInput(),
-          Spacer(),
+          Padding(
+              padding: EdgeInsets.only(left: 16, top: 16, bottom: 8),
+              child: Text("Select sources to lookup", style: TextStyle(fontSize: 18)),
+          ),
+          Expanded(child:
+          ListView.builder(
+            itemCount: Sources.sources.length,
+            itemBuilder: (BuildContext context, int index) => _sourceRow(Sources.sources[index].name),
+          )
+          ),
           _saveButton(context)
         ],
       ),
@@ -49,10 +59,22 @@ class AddKeywordPage extends StatelessWidget {
     );
   }
 
+  Widget _sourceRow(String name) {
+    return Padding(
+      padding: EdgeInsets.only(left:4, top: 8),
+      child: Row(
+        children: [
+          Checkbox(value: false,),
+          Text(name)
+        ]
+      ),
+    );
+  }
+
   Future _saveAndPop(BuildContext context) async {
 
     TODO:
-    _repository.save(Keyword(keyword:, sources:  ));
+    //_repository.save(Keyword(keyword:, sources:  ));
 
     Navigator.pop(context);
   }
