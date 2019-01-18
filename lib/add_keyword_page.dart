@@ -3,7 +3,25 @@ import 'package:keywords_lookup/repository/repository.dart';
 import 'model/keyword.dart';
 import 'package:keywords_lookup/sources/sources.dart';
 
-class AddKeywordPage extends StatelessWidget {
+class Pair {
+  Pair(this.name, this.checked);
+
+  String name;
+  bool checked;
+}
+
+class AddKeywordPage extends StatefulWidget {
+
+  List sourcesItems;
+
+  @override
+  State<StatefulWidget> createState() {
+    sourcesItems = Sources.sources.map((item) => Pair(item.name, false)).toList();
+    return AddKeywordState();
+  }
+}
+
+class AddKeywordState extends State<AddKeywordPage> {
 
   Repository _repository = Repository();
 
@@ -19,12 +37,12 @@ class AddKeywordPage extends StatelessWidget {
           _keywordInput(),
           Padding(
               padding: EdgeInsets.only(left: 16, top: 16, bottom: 8),
-              child: Text("Select sources to lookup", style: TextStyle(fontSize: 18)),
+              child: Text("Select sources to lookup", style: TextStyle(fontSize: 16)),
           ),
           Expanded(child:
           ListView.builder(
-            itemCount: Sources.sources.length,
-            itemBuilder: (BuildContext context, int index) => _sourceRow(Sources.sources[index].name),
+            itemCount: widget.sourcesItems.length,
+            itemBuilder: (BuildContext context, int index) => _sourceRow(widget.sourcesItems[index]),
           )
           ),
           _saveButton(context)
@@ -59,15 +77,18 @@ class AddKeywordPage extends StatelessWidget {
     );
   }
 
-  Widget _sourceRow(String name) {
+  Widget _sourceRow(Pair item) {
     return Padding(
-      padding: EdgeInsets.only(left:4, top: 8),
-      child: Row(
-        children: [
-          Checkbox(value: false,),
-          Text(name)
-        ]
-      ),
+      padding: EdgeInsets.only(left: 4, top: 8),
+      child: CheckboxListTile(
+          value: item.checked,
+          title: Text(item.name),
+          onChanged: (bool value) {
+            setState(() {
+              widget.sourcesItems.firstWhere((i) => i == item).checked = value;
+            });
+
+      }),
     );
   }
 
