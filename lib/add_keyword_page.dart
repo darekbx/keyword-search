@@ -12,11 +12,10 @@ class Pair {
 
 class AddKeywordPage extends StatefulWidget {
 
-  List sourcesItems;
+  List sourcesItems = Sources.sources.map((item) => Pair(item.name, false)).toList();
 
   @override
   State<StatefulWidget> createState() {
-    sourcesItems = Sources.sources.map((item) => Pair(item.name, false)).toList();
     return AddKeywordState();
   }
 }
@@ -24,6 +23,7 @@ class AddKeywordPage extends StatefulWidget {
 class AddKeywordState extends State<AddKeywordPage> {
 
   Repository _repository = Repository();
+  final _keywordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +36,15 @@ class AddKeywordState extends State<AddKeywordPage> {
         children: <Widget>[
           _keywordInput(),
           Padding(
-              padding: EdgeInsets.only(left: 16, top: 16, bottom: 8),
-              child: Text("Select sources to lookup", style: TextStyle(fontSize: 16)),
+            padding: EdgeInsets.only(left: 16, top: 16, bottom: 8),
+            child: Text(
+                "Select sources to lookup", style: TextStyle(fontSize: 16)),
           ),
           Expanded(child:
           ListView.builder(
             itemCount: widget.sourcesItems.length,
-            itemBuilder: (BuildContext context, int index) => _sourceRow(widget.sourcesItems[index]),
+            itemBuilder: (BuildContext context, int index) =>
+                _sourceRow(widget.sourcesItems[index]),
           )
           ),
           _saveButton(context)
@@ -51,14 +53,20 @@ class AddKeywordState extends State<AddKeywordPage> {
     );
   }
 
+  @override
+  void dispose() {
+    _keywordController.dispose();
+    super.dispose();
+  }
+
   Widget _keywordInput() {
     return Padding(
         padding: EdgeInsets.all(16.0),
-        child:
-        TextField(
-            decoration: InputDecoration(
-                hintText: "Enter keyword"
-            )
+        child: TextField(
+          decoration: InputDecoration(
+              hintText: "Enter keyword"
+          ),
+          controller: _keywordController,
         )
     );
   }
@@ -85,17 +93,22 @@ class AddKeywordState extends State<AddKeywordPage> {
           title: Text(item.name),
           onChanged: (bool value) {
             setState(() {
-              widget.sourcesItems.firstWhere((i) => i == item).checked = value;
+              widget.sourcesItems
+                  .firstWhere((i) => i == item)
+                  .checked = value;
             });
-
-      }),
+          }),
     );
   }
 
   Future _saveAndPop(BuildContext context) async {
-
-    TODO:
-    //_repository.save(Keyword(keyword:, sources:  ));
+    await _repository.save(Keyword(
+        keyword: _keywordController.text,
+        sources: widget.sourcesItems
+            .where((item) => item.checked)
+            .map((item) => item.name.toString())
+            .toList()
+    ));
 
     Navigator.pop(context);
   }

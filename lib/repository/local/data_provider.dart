@@ -24,6 +24,10 @@ class DataProvider {
   }
 
   Future<Database> _open() async {
+
+    // DEBUG on
+    await Sqflite.setDebugModeOn(true);
+
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, _dbName);
     return await openDatabase(
