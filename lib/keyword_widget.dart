@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keywords_lookup/model/keyword.dart';
 import 'package:keywords_lookup/sources/sources.dart';
 
 class KeywordWidget extends StatefulWidget {
@@ -6,7 +7,7 @@ class KeywordWidget extends StatefulWidget {
   KeywordWidget({Key key, this.keyword}) : super(key: key);
 
   final List sources = Sources.sources;
-  final String keyword;
+  final Keyword keyword;
 
   @override
   State<StatefulWidget> createState() => _KeywordWidgetState();
@@ -16,7 +17,6 @@ class _KeywordWidgetState extends State<KeywordWidget> {
 
   int newCount = 0;
   int allCount = 0;
-  String stateDebug = "Loading...";
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +28,12 @@ class _KeywordWidgetState extends State<KeywordWidget> {
             children: [
               Padding(
                   padding: EdgeInsets.only(bottom: 4),
-                  child: Text(stateDebug)
+                  child: Text(widget.keyword.keyword)
               ),
               Row(
                   children: <Widget>[
                     _dataLoaded() ? Text(
-                      "4/532", style: TextStyle(fontSize: 12),) : _progress(),
+                      "4/532", style: TextStyle(fontSize: 12)) : _progress(),
                     Padding(
                       padding: EdgeInsets.only(left: 16.0),
                       child: Text(
@@ -68,7 +68,6 @@ class _KeywordWidgetState extends State<KeywordWidget> {
 
     Future.delayed(Duration(seconds: 3), () {
       setState(() {
-        stateDebug = widget.keyword;
         allCount = 543;
       });
     }

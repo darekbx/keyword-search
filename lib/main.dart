@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:keywords_lookup/model/keyword.dart';
 import 'add_keyword_page.dart';
 import 'sources_page.dart';
 import 'keyword_widget.dart';
+import 'repository/repository.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,7 +25,6 @@ class KeywordListPage extends StatefulWidget {
   KeywordListPage({Key key, this.title}) : super(key: key);
 
   final String title;
-  final List keywords = ["RTT", "Wifi scan", "Round Trip Time"];
 
   @override
   _KeywordListPageState createState() => _KeywordListPageState();
@@ -40,13 +41,36 @@ class _KeywordListPageState extends State<KeywordListPage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: ListView.builder(
-            itemCount: widget.keywords.length,
-            itemBuilder: (BuildContext context, int index) {
-              return KeywordWidget(keyword: widget.keywords[index]);
-            }
-        ),
+        body: _buildList(context),
         floatingActionButton: _buildFloatingButtons(context)
+    );
+  }
+
+  FutureBuilder _buildList(BuildContext context) {
+    return FutureBuilder(
+      future: Repository().fetch(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return Center(child: Text('Loading...'));
+          default:
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return _buildKeywordsList(context, snapshot.data);
+            }
+        }
+      },
+    );
+  }
+
+  ListView _buildKeywordsList(BuildContext context, List<Keyword> keywords) {
+    return ListView.builder(
+        itemCount: keywords.length,
+        itemBuilder: (BuildContext context, int index) {
+          return KeywordWidget(keyword: keywords[index]);
+        }
     );
   }
 
