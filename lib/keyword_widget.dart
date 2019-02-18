@@ -37,7 +37,7 @@ class _KeywordWidgetState extends State<KeywordWidget> {
                     Padding(
                       padding: EdgeInsets.only(left: 16.0),
                       child: Text(
-                        "https://stackoverflow.com",
+                        widget.keyword.sources.join(', '),
                         style: TextStyle(
                             color: Colors.black38,
                             fontSize: 12

@@ -12,8 +12,6 @@ class Pair {
 
 class AddKeywordPage extends StatefulWidget {
 
-  List sourcesItems = Sources.sources.map((item) => Pair(item.name, false)).toList();
-
   @override
   State<StatefulWidget> createState() {
     return AddKeywordState();
@@ -22,6 +20,7 @@ class AddKeywordPage extends StatefulWidget {
 
 class AddKeywordState extends State<AddKeywordPage> {
 
+  List _sourcesItems = Sources.sources.map((item) => Pair(item.name, false)).toList();
   Repository _repository = Repository();
   final _keywordController = TextEditingController();
 
@@ -36,15 +35,17 @@ class AddKeywordState extends State<AddKeywordPage> {
         children: <Widget>[
           _keywordInput(),
           Padding(
-            padding: EdgeInsets.only(left: 16, top: 16, bottom: 8),
+            padding: EdgeInsets.only(left: 16, top: 8, bottom: 8),
             child: Text(
-                "Select sources to lookup", style: TextStyle(fontSize: 16)),
+                "Select sources to lookup",
+                style: TextStyle(fontSize: 16, color: Colors.black45)
+            ),
           ),
           Expanded(child:
           ListView.builder(
-            itemCount: widget.sourcesItems.length,
+            itemCount: _sourcesItems.length,
             itemBuilder: (BuildContext context, int index) =>
-                _sourceRow(widget.sourcesItems[index]),
+                _sourceRow(_sourcesItems[index]),
           )
           ),
           _saveButton(context)
@@ -87,13 +88,13 @@ class AddKeywordState extends State<AddKeywordPage> {
 
   Widget _sourceRow(Pair item) {
     return Padding(
-      padding: EdgeInsets.only(left: 4, top: 8),
+      padding: EdgeInsets.only(left: 4, top: 4),
       child: CheckboxListTile(
           value: item.checked,
           title: Text(item.name),
           onChanged: (bool value) {
             setState(() {
-              widget.sourcesItems
+              _sourcesItems
                   .firstWhere((i) => i == item)
                   .checked = value;
             });
@@ -102,9 +103,10 @@ class AddKeywordState extends State<AddKeywordPage> {
   }
 
   Future _saveAndPop(BuildContext context) async {
+    print(_sourcesItems);
     await _repository.save(Keyword(
         keyword: _keywordController.text,
-        sources: widget.sourcesItems
+        sources: _sourcesItems
             .where((item) => item.checked)
             .map((item) => item.name.toString())
             .toList()
