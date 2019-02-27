@@ -8,6 +8,13 @@ class RedditSource extends BaseSource {
 
   @override
   Future<List<Result>> fetchResults(String keyword) {
-    return super.fetchResults(keyword);
+    var results = List<Result>();
+    results.add(Result());
+    results.add(Result());
+    results.add(Result());
+
+    return Future.delayed(Duration(seconds: 2), () {
+      return results;
+    });
   }
 }

@@ -8,6 +8,12 @@ class StackoverflowSource extends BaseSource {
 
   @override
   Future<List<Result>> fetchResults(String keyword) {
-    return super.fetchResults(keyword);
+    var results = List<Result>();
+    results.add(Result());
+    results.add(Result());
+
+    return Future.delayed(Duration(seconds: 1), () {
+      return results;
+    });
   }
 }
